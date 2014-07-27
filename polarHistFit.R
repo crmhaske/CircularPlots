@@ -1,7 +1,7 @@
 ## =============================================================================
 ## Polar histograms with fit line v.1
 ## By Christie Haskell, 27-07-2014 (v.1)
-## Source: 
+## Source: https://github.com/crmhaske/CircularPlots/blob/HistogramFits/polarHistFit.R
 ## =============================================================================
 
 #Function to compute histgrams as rectangles
