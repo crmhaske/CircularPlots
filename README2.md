@@ -1,8 +1,3 @@
-CircularPlots
-=============
-
-R functions for polar plotting. These functions are best used with directional data.
-
 HistogramFits
 -------------
 
