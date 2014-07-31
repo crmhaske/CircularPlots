@@ -6,7 +6,7 @@ R functions for polar plotting. These functions are best used with directional d
 HistogramFits
 -------------
 
-Plotting a single histogram with one fit line
+**Plotting a single histogram with one fit line**
 
 polarHistFit.R <- contains two functions: histxy and polarHistFit
 - histxy: computes rectangular histograms
@@ -16,7 +16,7 @@ polarHistFitExs.R <- contains two examples using polarHistFit
 - bimodal distribution around the semi-circle
 - normal distribution around the whole circle
 
-Plotting multiple histograms with multiple fit lines onthe same plot
+**Plotting multiple histograms with multiple fit lines onthe same plot**
 
 polarHistFitMulti.R <- contains two functions: histxy and polarHistFit
 - histxy: computes rectangular histograms
