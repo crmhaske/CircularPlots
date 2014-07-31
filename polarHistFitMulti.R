@@ -1,7 +1,7 @@
 ## =============================================================================
-## Polar histograms with fit line v.1
+## Multiple polar histograms with fit lines v.1
 ## By Christie Haskell, 27-07-2014 (v.1)
-## Source: https://github.com/crmhaske/CircularPlots/blob/HistogramFits/polarHistFit.R
+## Source: 
 ## =============================================================================
 
 #Function to compute histgrams as rectangles
@@ -30,8 +30,8 @@ histxy<-function(x,binSize,innerRadius,xStart,xEnd) {
 #fn - function to fit to
 #params - fit paramaters
 
-polarHistFit<-function(
-  x,
+polarHistFitMulti<-function(
+  df,
   fn,
   params,
   units="deg",        #Units of data: deg or rad
@@ -44,53 +44,78 @@ polarHistFit<-function(
   xUnit="deg",        #X-axis units: deg or rad
   xLab="Offset",      #X-axis label
   binSize=range/nBins,      #Bin size
-  lineColBars="red4",       #Colour of histrogram lines
-  lineColFit="black",       #Colour of fit line
-  fillCol="palevioletred",  #Colour of histogram fill
-  lineSizeBars=1,     #Thickness of histrogram lines
-  lineSizeFit=1,      #Thickness of fit lines
+  cols,               #Colour of histrogram and fit lines
+  fillCol=rep("white",length(df$group)),    #Colour of histogram fill
+  lineSizeBars=rep(1,length(df$group)),     #Thickness of histrogram lines
+  lineSizeFit=rep(1,length(df$group)),      #Thickness of fit lines
   innerRadius=0.5,    #Radius of inner circle
   yIncrement=0.5,     #Y-axis increment
-  start=pi)           #Circle start point
+  start=pi,           #Circle start point
+  legend=TRUE)        #Display legend: TRUE or FALSE           
   {
   
   #Required packages
   require(ggplot2)
+  require(colorspace)
   
   #Most probability density functions require angles in radians
-  if (units=="deg") x<-x*pi/180
+  if (units=="deg") df$x<-df$x*pi/180
   
-  #x and y (density) coordinates of the fit line
-  if (missing(params)) {
-    fit<-data.frame("density"=fn(x)+innerRadius,"x"=x)
-  } else {  
-    fit<-data.frame("density"=fn(params,x)+innerRadius,"x"=x)
+  df2<-split(df,df$group)
+  groups<-names(df2)
+  
+  #If user has not defined colours, choose them from a sequential HCL
+  if (missing(cols)) {
+    cols<-rainbow_hcl(length(df2), start = 30, end = 300)
+    names(cols)<-names(df2)
   }
   
-  #Order fit line by x-coordinate (lowest to highest)
-  fit.ordered<-fit[order(fit$x),]
+  #x and y (density) coordinates of the fit line
+  fit<-list()
+  fit.ordered<-list()
+  ymax<-c()
+  for (i in 1:length(df2)) {
+    if (missing(params)) {
+      fit[[i]]<-data.frame(df2[[i]],"density"=fn(df2[[i]]$x)+innerRadius)
+      fit.ordered[[i]]<-fit[[i]][order(fit[[i]]$x),]
+      ymax[i]<-max(fit[[i]]$density)
+    } else {
+      fit[[i]]<-data.frame(df2[[i]],"density"=fn(params[,i],df2[[i]]$x)+innerRadius)
+      fit.ordered[[i]]<-fit[[i]][order(fit[[i]]$x),]
+      ymax[i]<-max(fit[[i]]$density)
+    }
+  }
   
   #Histograms
-  pdhist<-histxy(x,binSize,innerRadius,xStart,xEnd)
+  for (i in 1:length(df2)) {
+    pdhist[[i]]<-histxy(df2[[i]]$x,binSize,innerRadius,xStart,xEnd)
+  }
   
   p<-ggplot()
   
   #Bars
-  p<-p+geom_rect(data=pdhist,
-                 aes(xmin=x.min,
-                     xmax=x.max,
-                     ymin=y.min,
-                     ymax=y.max),
-                 fill=fillCol,
-                 size=lineSizeBars,
-                 colour=lineColBars)
+  for (i in 1:length(df2)) {
+    if (i==1) al<-1
+    else al<-0
+    p<-p+geom_rect(data=pdhist[[i]],
+                   aes(xmin=x.min,
+                       xmax=x.max,
+                       ymin=y.min,
+                       ymax=y.max),
+                   colour=cols[i],
+                   fill=fillCol[i],
+                   size=lineSizeBars[i],
+                   alpha=al)
+  }
   
   #Fit line
-  p<-p+geom_line(d = fit.ordered,
+  for (i in 1:length(df2)) {
+    p<-p+geom_line(d = fit.ordered[[i]],
                    aes(x=x,
                        y=density),
-                   size=lineSizeFit,
-                   colour=lineColFit)
+                   colour=cols[i],
+                   size=lineSizeFit[i])
+  }
   
   #x-axis
   if (circleProp=="half") {
@@ -114,7 +139,7 @@ polarHistFit<-function(
   }
     
   #y-axis
-  ymax<-ceiling(max(fit$density)*1/yIncrement)*yIncrement
+  ymax<-ceiling(max(ymax)*1/yIncrement)*yIncrement
   brs<-seq(0,ymax,yIncrement)
   guideStart<-innerRadius/yIncrement
   yAdj<-brs-innerRadius
@@ -140,7 +165,7 @@ polarHistFit<-function(
               y="Probability Density")
   }
   
-  #Theme elements
+  #Ascetics
   p<-p+theme_bw()+
     theme(panel.border=element_blank(),
           axis.ticks.y=element_blank(),
