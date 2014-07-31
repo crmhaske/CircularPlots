@@ -1,7 +1,7 @@
 ## =============================================================================
 ## Two examples on how to use polarHistFitMulti.R v.1
 ## By Christie Haskell, 31-07-2014 (v.1)
-## Source:
+## Source: https://github.com/crmhaske/CircularPlots/blob/HistogramFits/polarHistFitMultiExs.R
 ## =============================================================================
 
 
