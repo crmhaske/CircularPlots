@@ -3,6 +3,14 @@ CircularPlots
 
 R functions for polar plotting. These functions are best used with directional data.
 
+Master
+------
+
+**Stacked polar bar chart**
+
+stackedPolarBarChart.R - plots un-normalized, stacked bars on a polar plot
+stackedPolarBarChartExs.R - exmaple of how to use the function in stackedPolarBarChart.R
+
 HistogramFits
 -------------
 
