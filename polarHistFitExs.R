@@ -4,6 +4,7 @@
 ## Source: https://github.com/crmhaske/CircularPlots/blob/HistogramFits/polarHistFitExs.R
 ## =============================================================================
 
+require(mixtools)
 
 #Half circle, bimodal distribution
 set.seed(123)
