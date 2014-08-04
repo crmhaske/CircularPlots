@@ -4,7 +4,7 @@
 ## Source: http://chrisladroue.com/2012/02/polar-histogram-pretty-and-useful/
 ## Modified from original by Christos Hatzis 3.22.2012 (CH)
 ## Modified from modified by Christie Haskell 8.4.2014 (CHR)
-## Source: 
+## Source: https://github.com/crmhaske/CircularPlots/blob/master/stackedPolarBarChart.R
 ## =============================================================================
 polarBarChart <-
   function(
