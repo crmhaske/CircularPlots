@@ -1,7 +1,7 @@
 ## =============================================================================
 ## Example using stackedPolarBarChart.R
 ## By Christie Haskell, 04-08-2014 (v.1)
-## Source: 
+## Source: https://github.com/crmhaske/CircularPlots/blob/master/stackedPolarBarChartExs.R
 ## =============================================================================
 
 score<-rep(c("A","B","C"),10)
